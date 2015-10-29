@@ -45,7 +45,7 @@ defmodule Arc.Ecto.Mixfile do
   # Type `mix help deps` for more examples and options
   defp deps do
     [
-      {:arc, "~> 0.1.0"},
+      {:arc, git: "https://github.com/stavro/arc.git", branch: "remote-files"},
       {:ecto, ">= 0.10.0"},
       {:mock, "~> 0.1.1", only: :test}
     ]
