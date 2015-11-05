@@ -21,7 +21,13 @@ defmodule Arc.Ecto.Model do
       arc_params = case params do
         :empty -> :empty
         %{} ->
-          Dict.take(params, required ++ optional)
+          needed_params = Enum.map(required ++ optional, fn(x) -> 
+            cond do 
+              is_binary(x) -> String.to_atom(x)  
+              true -> x
+            end
+          end)
+          Dict.take(params, needed_params)
           |> Enum.map(fn({field, file}) -> {field, {file, scope}} end)
           |> Enum.into(%{})
       end
