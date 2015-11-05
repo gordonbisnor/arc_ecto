@@ -40,7 +40,7 @@ defmodule ArcTest.Ecto.Model do
   end
 
   test_with_mock "cascades storage success into a valid change", DummyDefinition, [store: fn({"/path/to/my/file.png", %TestUser{}}) -> {:ok, "file.png"} end] do
-    cs = TestUser.changeset(%TestUser{}, %{"avatar" => "/path/to/my/file.png"})
+    cs = TestUser.changeset(%TestUser{}, %{avatar: "/path/to/my/file.png"})
     assert called DummyDefinition.store({"/path/to/my/file.png", %TestUser{}})
     assert cs.valid?
     %{file_name: "file.png", updated_at: updated_at} = cs.changes.avatar
@@ -48,19 +48,19 @@ defmodule ArcTest.Ecto.Model do
   end
 
   test_with_mock "cascades storage error into an error", DummyDefinition, [store: fn({"/path/to/my/file.png", %TestUser{}}) -> {:error, :invalid_file} end] do
-    cs = TestUser.changeset(%TestUser{}, %{"avatar" => "/path/to/my/file.png"})
+    cs = TestUser.changeset(%TestUser{}, %{avatar: "/path/to/my/file.png"})
     assert called DummyDefinition.store({"/path/to/my/file.png", %TestUser{}})
     assert cs.valid? == false
     assert cs.errors == [avatar: "is invalid"]
   end
 
   test_with_mock "converts changeset into model", DummyDefinition, [store: fn({"/path/to/my/file.png", %TestUser{}}) -> {:error, :invalid_file} end] do
-    TestUser.changeset(%Ecto.Changeset{model: %TestUser{}}, %{"avatar" => "/path/to/my/file.png"})
+    TestUser.changeset(%Ecto.Changeset{model: %TestUser{}}, %{avatar: "/path/to/my/file.png"})
     assert called DummyDefinition.store({"/path/to/my/file.png", %TestUser{}})
   end
 
   test_with_mock "applies changes to model", DummyDefinition, [store: fn({"/path/to/my/file.png", %TestUser{}}) -> {:error, :invalid_file} end] do
-    TestUser.changeset(%Ecto.Changeset{model: %TestUser{}}, %{"avatar" => "/path/to/my/file.png", "first_name" => "test"})
+    TestUser.changeset(%Ecto.Changeset{model: %TestUser{}}, %{avatar: "/path/to/my/file.png", first_name: "test"})
     assert called DummyDefinition.store({"/path/to/my/file.png", %TestUser{first_name: "test"}})
   end
 end
